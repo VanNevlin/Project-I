@@ -5,7 +5,7 @@
 struct user {
     char userName[255];
     char passWord[255];
-    char notes[255];
+    char notes[255][255];
     bool privat;
     int status;
     user* Friend;
@@ -44,6 +44,13 @@ void pushtail(char* name, char* pass) {
 }
 void pushmid(char* name, char* pass) {
     user* temp = new_User(name, pass);
+    user* temp2 = head;
+    while (temp2) {
+        if (strcmp(temp->userName, temp2->userName) == 0) {
+            return;
+        }
+        temp2 = temp2->next;
+    }
     if (!head) {
         head = tail = temp;
     }
@@ -84,13 +91,28 @@ void post(user* curr) {
     char kalimat[255];
     scanf("%[^\n]", kalimat);
     getchar();
-    strcpy(curr->notes, kalimat);
+    int i = 0;
+    while (kalimat[i] != '\0') {
+        if (kalimat[i] >= '0' && kalimat[i] <= '9') {
+            return;
+        }
+        i++;
+    }
+    int index = 0;
+    while (curr->notes[index][0] != '\0') {
+        index++;
+    }
+    strcpy(curr->notes[index], kalimat);
 }
 void print_post(user* curr) {
     if (!curr) {
         return;
     }
-    printf("%s\n", curr->notes);
+    int index = 0;
+    while (curr->notes[index + 1][0] != '\0') {
+        printf("%s\n", curr->notes[index]);
+        index++;
+    }
 }
 void see_Post(user* curr) {
     if (!curr->Friend) {
@@ -159,13 +181,38 @@ void note_Type(user* curr) {
     }
 }
 
+void editnote(user* curr, int index) {
+    if (curr->notes[index - 1][0] == '\0') {
+        return;
+    }
+    char kalimat[255];
+    scanf("%[^\n]", kalimat);
+    int i = 0;
+    while (kalimat[i] >= 0 && kalimat[i] <= 9) {
+        return;
+        i++;
+    }
+    curr->notes[index - 1][0] = '\0';
+    strcpy(curr->notes[index - 1], kalimat);
+}
+
+void deletenote(user* curr, int index) {
+    if (curr->notes[index - 1][0] == '\0') {
+        return;
+    }
+    //Pindahin ke recyle binnya ??
+    //Belinda I need your Help WKWK
+}
+
 int main() {
+    pushmid((char*)"bili", (char*)"oass");
     pushmid((char*)"bili", (char*)"oass");
     pushmid((char*)"aili", (char*)"pass");
     post(head);
     post(head->next);
-    make_Private(head);
-    note_Type(head);
+    editnote(head->next, 1);
+    // make_Private(head);
+    // note_Type(head);
     // print_post(head->next);
     print_AllData();
     // printall();
