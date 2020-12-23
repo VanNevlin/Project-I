@@ -5,7 +5,7 @@
 struct user {
     char userName[255];
     char passWord[255];
-    char notes[255];
+    char notes[255][255];
     bool privat;
     int status;
     user* Friend;
@@ -84,13 +84,21 @@ void post(user* curr) {
     char kalimat[255];
     scanf("%[^\n]", kalimat);
     getchar();
-    strcpy(curr->notes, kalimat);
+    int index = 0;
+    while (curr->notes[index][0] != '\0') {
+        index++;
+    }
+    strcpy(curr->notes[index], kalimat);
 }
 void print_post(user* curr) {
     if (!curr) {
         return;
     }
-    printf("%s\n", curr->notes);
+    int index = 0;
+    while (curr->notes[index + 1][0] != '\0') {
+        printf("%s\n", curr->notes[index]);
+        index++;
+    }
 }
 void see_Post(user* curr) {
     if (!curr->Friend) {
@@ -166,7 +174,7 @@ int main() {
     post(head->next);
     make_Private(head);
     note_Type(head);
-    // print_post(head->next);
+    print_post(head->next);
     print_AllData();
     // printall();
 
